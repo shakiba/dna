@@ -1,0 +1,25 @@
+{
+  "simple" : "This is a simple string value.",
+  "object" : {
+    "key-one" : "One",
+    "key-two" : "Two",
+    "inner-one" : {
+      "inner-key-one" : "OneOne",
+      "inner-key-two" : "TwoTwo"
+    },
+    "inner-two" : {
+      "inner-key-one" : "TwoOne",
+      "inner-key-two" : "TwoTwo",
+      "deeper" : {
+        "deep-key" : [ "Deep One", "Deep One" ]
+      }
+    }
+  },
+  "multi-line" : "This is\na multi-line\nstring value.",
+  "list" : [ "simple", "multi\n\nline\n", {
+    "inner-one" : "One",
+    "inner-two" : "Two\nTwo"
+  } ],
+  "empty" : "",
+  "mixed" : "Some text."
+}

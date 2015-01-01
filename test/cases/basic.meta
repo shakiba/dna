@@ -1,0 +1,42 @@
+simple: This is a simple string value.
+
+object:
+  key-one: One
+  key-two: Two
+  inner-one:
+    inner-key-one: OneOne
+    inner-key-two: TwoTwo
+  
+  inner-two:
+    inner-key-one: TwoOne
+    inner-key-two: TwoTwo
+    
+    deeper:
+      deep-key: Deep One
+
+      deep-key: Deep One
+
+multi-line:
+  This is
+  a multi-line
+  string value.
+
+list: simple
+
+list:
+  multi
+
+  line
+
+
+list:
+  inner-one: One
+
+  inner-two:
+    Two
+    Two
+
+empty: 
+
+mixed: Some text.
+  and: Values.

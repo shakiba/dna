@@ -1,0 +1,29 @@
+{
+  "name": "meta-file",
+  "version": "0.1.0",
+  "description": "",
+  "author": "Ali Shakiba",
+  "keywords": [
+    "website",
+    "static",
+    "dynamic"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shakiba/meta.git"
+  },
+  "dependencies": {},
+  "main": "meta-file.js",
+  "bin": {
+    "meta2json": "meta-file-cli.js"
+  },
+  "preferGlobal": "true",
+  "devDependencies": {
+    "should": "~4.4.2",
+    "mocha": "~2.1.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  }
+}
