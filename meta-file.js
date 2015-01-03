@@ -69,7 +69,7 @@ function config(options) {
 
         if (line.meta) {
 
-          console.log('.', line.meta, line.value);
+          noisy && console.log('.', line.meta, line.value);
 
           if (line.meta == 'type') {
             if (line.key && line.value == 'list') {
@@ -80,13 +80,14 @@ function config(options) {
             }
           }
 
-          if (line.meta == 'plugin' && options.plugins) {
-            plugin = options.plugins(line.value);
+          if (line.meta == 'plugin') {
+            plugin = getplugin(line.value);
           }
 
         } else if (line.key) {
 
           data = data || {};
+          noisy && console.log('+', line.key, JSON.stringify(line.value));
           assign(data, line.key, line.value || child);
 
         } else {
@@ -105,17 +106,29 @@ function config(options) {
       noisy && console.log('<<', JSON.stringify(result));
       return result;
     })(0);
+  }
 
-    function assign(obj, key, value) {
-      noisy && console.log('+', key, JSON.stringify(value));
-      if (!(key in obj)) {
-        obj[key] = value;
-      } else {
-        if (!Array.isArray(obj[key])) {
-          obj[key] = [ obj[key] ];
-        }
-        obj[key].push(value);
+  var gotplugin = {};
+  function getplugin(name) {
+    if (name in gotplugin) {
+      return gotplugin[name];
+    }
+    if (typeof options.plugins === 'function') {
+      return gotplugin[name] = options.plugins(name);
+    }
+    if (typeof options.plugins === 'object') {
+      return options.plugins[name];
+    }
+  }
+
+  function assign(obj, key, value) {
+    if (!(key in obj)) {
+      obj[key] = value;
+    } else {
+      if (!Array.isArray(obj[key])) {
+        obj[key] = [ obj[key] ];
       }
+      obj[key].push(value);
     }
   }
 

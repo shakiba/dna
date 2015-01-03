@@ -3,29 +3,57 @@ var path = require('path');
 var fs = require('fs');
 var metafile = require('../meta-file');
 
-var cases = [ 'basic' ];
-
 describe('meta-file', function() {
 
-  it('sync', function() {
+  it('simple', function() {
 
-    cases.forEach(function(name) {
-      console.log(name);
+    var meta = fs.readFileSync(__dirname + '/cases/basic.meta', 'utf8');
+    var json = fs.readFileSync(__dirname + '/cases/basic.json', 'utf8');
 
-      var meta = __dirname + '/cases/' + name + '.meta';
-      var json = __dirname + '/cases/' + name + '.json';
+    json = JSON.parse(json);
+    meta = metafile.parse(meta);
 
-      meta = fs.readFileSync(meta, 'utf8');
-      json = fs.readFileSync(json, 'utf8');
+    // console.log(json);
+    // console.log(meta);
 
-      json = JSON.parse(json);
-      meta = metafile.parse(meta);
+    meta.should.eql(json);
 
-      // console.log(json);
-      // console.log(meta);
+  });
 
-      meta.should.eql(json);
+  it('plugin', function() {
+
+    var mf = metafile.config({
+      plugins : function(plugin) {
+        return function convert(data) {
+          if (typeof data === 'string') {
+            if (plugin == 'prefix') {
+              return '-' + data;
+            } else if (plugin == 'postfix') {
+              return data + '-';
+            }
+          } else if (typeof data === 'object') {
+            for ( var key in data)
+              if (data.hasOwnProperty(key))
+                data[key] = convert(data[key]);
+          } else if (Array.isArray(data)) {
+            for (var i = 0; i < data.length; i++)
+              data[i] = convert(data[i]);
+          }
+          return data;
+        };
+      }
     });
+
+    var meta = fs.readFileSync(__dirname + '/cases/plugin.meta', 'utf8');
+    var json = fs.readFileSync(__dirname + '/cases/plugin.json', 'utf8');
+
+    json = JSON.parse(json);
+    meta = mf.parse(meta);
+
+    // console.log(json);
+    // console.log(meta);
+
+    meta.should.eql(json);
 
   });
 
