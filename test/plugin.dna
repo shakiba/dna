@@ -1,7 +1,0 @@
-.plugin: prefix
-
-first: First
-
-second:
-  Second
-  .plugin: postfix

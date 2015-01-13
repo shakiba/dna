@@ -71,8 +71,6 @@ function config(options) {
 
       var data = null, text = null;
 
-      var plugin = null;
-
       while (input.has()) {
 
         var line = input.peek();
@@ -106,10 +104,6 @@ function config(options) {
             }
           }
 
-          if (line.meta == 'plugin') {
-            plugin = getplugin(line.value);
-          }
-
         } else if (line.key) {
 
           data = data || {};
@@ -126,25 +120,9 @@ function config(options) {
       }
 
       var result = data || text && text.join('\n').replace(/\n$/, '');
-      if (plugin) {
-        result = plugin(result);
-      }
       noisy && console.log('<<', JSON.stringify(result));
       return result;
     })(0);
-  }
-
-  var gotplugin = {};
-  function getplugin(name) {
-    if (name in gotplugin) {
-      return gotplugin[name];
-    }
-    if (typeof options.plugins === 'function') {
-      return gotplugin[name] = options.plugins(name);
-    }
-    if (typeof options.plugins === 'object') {
-      return options.plugins[name];
-    }
   }
 
   function assign(obj, key, value) {
