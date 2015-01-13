@@ -1,47 +1,70 @@
 function config(options) {
   options = options || {};
 
+  var noisy = !options.noisy;
+
+  function wrap(input) {
+
+    if (typeof input === 'string') {
+      input = input.split(/\n/);
+    }
+
+    if (input.length) {
+      var array = input;
+      var i = 0;
+      input = {
+        hasNext : function() {
+          return array.length > i;
+        },
+        next : function() {
+          return array.length > i ? array[i++] : undefined;
+        }
+      };
+    }
+
+    if (input.hasNext && input.next) {
+      var last = null;
+      return {
+        has : function() {
+          return last !== null || input.hasNext();
+        },
+        peek : function() {
+          if (last === null) {
+            last = new Line(input.next());
+          }
+          return last;
+        },
+        poll : function() {
+          if (last === null) {
+            return new Line(input.next());
+          }
+          var line;
+          line = last;
+          last = null;
+          return line;
+        }
+      };
+    }
+  }
+
+  function Line(line) {
+    this.line = line;
+    var regex = /^(\s*)(.*)$/.exec(line);
+    this.space = regex[1].length;
+    this.text = regex[2];
+    if (regex = /^((\w|\-)+)\:\s*(.*)/.exec(this.text)) {
+      this.key = regex[1];
+      this.value = regex[3];
+    } else if (regex = /^((\w|\-)*)\.((\w|\-)+)\:\s*(.*)/.exec(this.text)) {
+      this.key = regex[1];
+      this.meta = regex[3];
+      this.value = regex[5];
+    }
+  }
+
   function parse(input) {
 
-    var noisy = options.noisy;
-
-    var lines = input.split(/\n/).map(function(line, i) {
-      line = {
-        line : line
-      };
-      var regex = /^(\s*)(.*)$/.exec(line.line);
-      line.space = regex[1].length;
-      line.text = regex[2];
-      if (regex = /^((\w|\-)+)\:\s*(.*)/.exec(line.text)) {
-        line.key = regex[1];
-        line.value = regex[3];
-      } else if (regex = /^((\w|\-)*)\.((\w|\-)+)\:\s*(.*)/.exec(line.text)) {
-        line.key = regex[1];
-        line.meta = regex[3];
-        line.value = regex[5];
-      }
-      return line;
-    });
-
-    lines.has = function() {
-      return !!lines.length;
-    };
-
-    lines.peek = function() {
-      if (lines.length) {
-        var line = lines[0];
-        noisy && console.log('?', line.line);
-        return line;
-      }
-    };
-
-    lines.poll = function() {
-      if (lines.length) {
-        var line = lines.shift();
-        noisy && console.log('-', line.line);
-        return line;
-      }
-    };
+    input = wrap(input);
 
     return (function read(space, parent) {
       noisy && console.log('>>');
@@ -50,18 +73,21 @@ function config(options) {
 
       var plugin = null;
 
-      while (lines.has()) {
+      while (input.has()) {
 
-        var line = lines.peek();
+        var line = input.peek();
+        noisy && console.log('?', line.line);
         if (line.text && line.space < space) {
           break;
         }
 
-        lines.poll();
+        input.poll();
+        noisy && console.log('-', line.line);
 
         var child = line.value;
-        if (lines.has()) {
-          var next = lines.peek();
+        if (input.has()) {
+          var next = input.peek();
+          noisy && console.log('?', next.line);
           if (next.space > space) {
             child = read(next.space);
           }
