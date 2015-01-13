@@ -5,22 +5,22 @@ var dna = require('../dna');
 
 describe('DNA', function() {
 
-  it('simple', function() {
+  it('Basic', function() {
 
-    var input = fs.readFileSync(__dirname + '/cases/basic.dna', 'utf8');
-    var output = fs.readFileSync(__dirname + '/cases/basic.json', 'utf8');
+    var input = readFileSync('basic.dna');
+    var output = readFileSync('basic.json');
 
     output = JSON.parse(output);
     input = dna.parse(input);
 
-    // console.log(json);
-    // console.log(dna);
+    // console.log(input);
+    // console.log(output);
 
     input.should.eql(output);
 
   });
 
-  it('plugin', function() {
+  it('Plugin', function() {
 
     var mf = dna.config({
       plugins : function(plugin) {
@@ -44,17 +44,20 @@ describe('DNA', function() {
       }
     });
 
-    var input = fs.readFileSync(__dirname + '/cases/plugin.dna', 'utf8');
-    var output = fs.readFileSync(__dirname + '/cases/plugin.json', 'utf8');
+    var input = readFileSync('plugin.dna');
+    var output = readFileSync('plugin.json');
 
     output = JSON.parse(output);
     input = mf.parse(input);
 
-    // console.log(json);
-    // console.log(dna);
+    // console.log(input);
+    // console.log(output);
 
     input.should.eql(output);
 
   });
 
+  function readFileSync(name) {
+    return fs.readFileSync(path.resolve(__dirname, name), 'utf8');
+  }
 });

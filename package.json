@@ -1,12 +1,15 @@
 {
-  "name": "dna-file",
+  "name": "dna-format",
   "version": "0.1.0",
-  "description": "",
+  "description": "Human friendly data format.",
   "author": "Ali Shakiba",
   "keywords": [
-    "website",
-    "static",
-    "dynamic"
+    "human-readable",
+    "format",
+    "file",
+    "serialization",
+    "data",
+    "document"
   ],
   "license": "MIT",
   "repository": {

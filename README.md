@@ -1,3 +1,3 @@
 ## DNA
 
-Human-readable data file format.
+Human friendly data format.
