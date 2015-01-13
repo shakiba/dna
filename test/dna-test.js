@@ -1,28 +1,28 @@
 var should = require('should');
 var path = require('path');
 var fs = require('fs');
-var dnafile = require('../dna-file');
+var dna = require('../dna');
 
-describe('dna-file', function() {
+describe('DNA', function() {
 
   it('simple', function() {
 
-    var dna = fs.readFileSync(__dirname + '/cases/basic.dna', 'utf8');
-    var json = fs.readFileSync(__dirname + '/cases/basic.json', 'utf8');
+    var input = fs.readFileSync(__dirname + '/cases/basic.dna', 'utf8');
+    var output = fs.readFileSync(__dirname + '/cases/basic.json', 'utf8');
 
-    json = JSON.parse(json);
-    dna = dnafile.parse(dna);
+    output = JSON.parse(output);
+    input = dna.parse(input);
 
     // console.log(json);
     // console.log(dna);
 
-    dna.should.eql(json);
+    input.should.eql(output);
 
   });
 
   it('plugin', function() {
 
-    var mf = dnafile.config({
+    var mf = dna.config({
       plugins : function(plugin) {
         return function convert(data) {
           if (typeof data === 'string') {
@@ -44,16 +44,16 @@ describe('dna-file', function() {
       }
     });
 
-    var dna = fs.readFileSync(__dirname + '/cases/plugin.dna', 'utf8');
-    var json = fs.readFileSync(__dirname + '/cases/plugin.json', 'utf8');
+    var input = fs.readFileSync(__dirname + '/cases/plugin.dna', 'utf8');
+    var output = fs.readFileSync(__dirname + '/cases/plugin.json', 'utf8');
 
-    json = JSON.parse(json);
-    dna = mf.parse(dna);
+    output = JSON.parse(output);
+    input = mf.parse(input);
 
     // console.log(json);
     // console.log(dna);
 
-    dna.should.eql(json);
+    input.should.eql(output);
 
   });
 

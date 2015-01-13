@@ -11,12 +11,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/shakiba/dna-file.git"
+    "url": "https://github.com/shakiba/dna.git"
   },
   "dependencies": {},
-  "main": "dna-file.js",
+  "main": "dna.js",
   "bin": {
-    "dna2json": "dna-file-cli.js"
+    "dna2json": "dna-cli.js"
   },
   "preferGlobal": "true",
   "devDependencies": {
