@@ -1,3 +1,3 @@
-## meta-file
+## DNA
 
 Human-readable data file format.

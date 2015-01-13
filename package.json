@@ -1,5 +1,5 @@
 {
-  "name": "meta-file",
+  "name": "dna-file",
   "version": "0.1.0",
   "description": "",
   "author": "Ali Shakiba",
@@ -11,12 +11,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/shakiba/meta.git"
+    "url": "https://github.com/shakiba/dna-file.git"
   },
   "dependencies": {},
-  "main": "meta-file.js",
+  "main": "dna-file.js",
   "bin": {
-    "meta2json": "meta-file-cli.js"
+    "dna2json": "dna-file-cli.js"
   },
   "preferGlobal": "true",
   "devDependencies": {

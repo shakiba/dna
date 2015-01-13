@@ -2,11 +2,11 @@
 
 var path = require('path');
 var fs = require('fs');
-var metafile = require('./meta-file');
+var dnafile = require('./dna-file');
 
 if (process.argv.length >= 3) {
   var content = fs.readFileSync(process.argv[2], 'utf8');
-  content = metafile.parse(content);
+  content = dnafile.parse(content);
   content = JSON.stringify(content, null, ' ');
   console.log(content);
   

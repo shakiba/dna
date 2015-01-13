@@ -1,7 +1,7 @@
 function config(options) {
   options = options || {};
 
-  var noisy = !options.noisy;
+  var noisy = options.noisy;
 
   function wrap(input) {
 

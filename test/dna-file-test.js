@@ -1,28 +1,28 @@
 var should = require('should');
 var path = require('path');
 var fs = require('fs');
-var metafile = require('../meta-file');
+var dnafile = require('../dna-file');
 
-describe('meta-file', function() {
+describe('dna-file', function() {
 
   it('simple', function() {
 
-    var meta = fs.readFileSync(__dirname + '/cases/basic.meta', 'utf8');
+    var dna = fs.readFileSync(__dirname + '/cases/basic.dna', 'utf8');
     var json = fs.readFileSync(__dirname + '/cases/basic.json', 'utf8');
 
     json = JSON.parse(json);
-    meta = metafile.parse(meta);
+    dna = dnafile.parse(dna);
 
     // console.log(json);
-    // console.log(meta);
+    // console.log(dna);
 
-    meta.should.eql(json);
+    dna.should.eql(json);
 
   });
 
   it('plugin', function() {
 
-    var mf = metafile.config({
+    var mf = dnafile.config({
       plugins : function(plugin) {
         return function convert(data) {
           if (typeof data === 'string') {
@@ -44,16 +44,16 @@ describe('meta-file', function() {
       }
     });
 
-    var meta = fs.readFileSync(__dirname + '/cases/plugin.meta', 'utf8');
+    var dna = fs.readFileSync(__dirname + '/cases/plugin.dna', 'utf8');
     var json = fs.readFileSync(__dirname + '/cases/plugin.json', 'utf8');
 
     json = JSON.parse(json);
-    meta = mf.parse(meta);
+    dna = mf.parse(dna);
 
     // console.log(json);
-    // console.log(meta);
+    // console.log(dna);
 
-    meta.should.eql(json);
+    dna.should.eql(json);
 
   });
 
