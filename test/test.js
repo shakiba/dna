@@ -1,7 +1,7 @@
 var should = require('should');
 var path = require('path');
 var fs = require('fs');
-var dna = require('../dna');
+var dna = require('../');
 
 describe('DNA', function() {
 
