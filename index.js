@@ -1,3 +1,10 @@
+/*
+ * DNA
+ * Copyright (c) 2015 Ali Shakiba and other contributors
+ * Available under the MIT license
+ * @license
+ */
+
 function config(options) {
   options = options || {};
 
