@@ -1,6 +1,6 @@
 {
-  "name": "dna.js",
-  "version": "0.0.0",
+  "name": "dna-js",
+  "version": "0.0.1",
   "description": "Human friendly data format.",
   "author": "Ali Shakiba",
   "keywords": [
@@ -17,7 +17,7 @@
     "url": "https://github.com/shakiba/dna.git"
   },
   "dependencies": {},
-  "main": "index.js",
+  "main": "dna.js",
   "bin": {
     "dna": "bin/index.js"
   },
