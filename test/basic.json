@@ -20,6 +20,5 @@
     "inner-one" : "One",
     "inner-two" : "Two\nTwo"
   } ],
-  "empty" : "",
-  "mixed" : "Some text."
+  "empty" : ""
 }

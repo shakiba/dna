@@ -37,6 +37,3 @@ list:
     Two
 
 empty: 
-
-mixed: Some text.
-  and: Values.

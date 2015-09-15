@@ -1,8 +1,8 @@
 /*
- * DNA
- * Copyright (c) 2015 Ali Shakiba and other contributors
+ * DNA - Human readable data format
+ *
+ * Copyright (c) 2015 Ali Shakiba
  * Available under the MIT license
- * @license
  */
 
 function config(options) {
@@ -143,11 +143,92 @@ function config(options) {
     }
   }
 
+  function stringify(obj, replacer, space) {
+    if (typeof replacer === 'string') {
+      space = replacer;
+      replacer = null;
+    } else if (typeof replacer !== 'function') {
+      replacer = null;
+    }
+    if (typeof space !== 'string' || !/^\s+$/.test(space)) {
+      space = '  ';
+    }
+
+    var output = [];
+    var ctx = {
+      space : space,
+      replacer : replacer,
+      cycle : [],
+      mark : function(value) {
+        if (ctx.cycle.indexOf(value) === -1) {
+          ctx.cycle.push(value);
+          return true;
+        } else {
+          return false;
+        }
+      },
+      push : function(value) {
+        output.push(value);
+      }
+    };
+
+    if (obj === null || typeof obj === 'undefined') {
+
+    } else if (Array.isArray(obj)) {
+      for (var i = 0; i < obj.length; i++) {
+        write(ctx, '', i + ':', obj[i]);
+      }
+    } else if (typeof obj === 'object') {
+      for ( var key in obj) {
+        write(ctx, '', key + ':', obj[key]);
+      }
+    } else {
+      ctx.push(obj);
+    }
+
+    return output.join('\n');
+  }
+
+  function write(ctx, space, name, value) {
+    if (value === null || typeof value === 'undefined') {
+      ctx.push(space + name);
+
+    } else if (Array.isArray(value)) {
+      if (ctx.mark(value)) {
+        for (var i = 0; i < value.length; i++) {
+          write(ctx, space, name, value[i]);
+        }
+      }
+
+    } else if (typeof value === 'object') {
+      if (ctx.mark(value)) {
+        ctx.push(space + name);
+        for ( var key in value) {
+          write(ctx, space + ctx.space, key + ':', value[key]);
+        }
+      }
+
+    } else if (typeof value === 'string') {
+      if (value.indexOf('\n') >= 0) {
+        ctx.push(space + name + '\n' + space + ctx.space
+            + value.replace(/\n/g, '\n' + space + ctx.space));
+      } else {
+        ctx.push(space + name + ' ' + value);
+      }
+
+    } else {
+      ctx.push(space + name + ' ' + value);
+    }
+  }
+
   return {
     parse : parse,
+    stringify : stringify,
     config : config
   };
 }
+
+// Array.isArray, array.indexOf
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = config();

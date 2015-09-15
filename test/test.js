@@ -1,26 +1,28 @@
-var should = require('should');
+var expect = require('expect.js');
 var path = require('path');
-var fs = require('fs');
-var dna = require('../');
+var FS = require('fs');
+var DNA = require('../');
 
 describe('DNA', function() {
 
-  it('Basic', function() {
-
+  it('parse', function() {
     var input = readFileSync('basic.dna');
     var output = readFileSync('basic.json');
-
     output = JSON.parse(output);
-    input = dna.parse(input);
+    input = DNA.parse(input);
+    expect(input).eql(output);
+  });
 
-    // console.log(input);
-    // console.log(output);
+  it('stringify', function() {
+    var obj = readFileSync('basic.json');
+    obj = JSON.parse(obj);
 
-    input.should.eql(output);
+    obj = DNA.stringify(obj);
 
+    console.log(obj);
   });
 
   function readFileSync(name) {
-    return fs.readFileSync(path.resolve(__dirname, name), 'utf8');
+    return FS.readFileSync(path.resolve(__dirname, name), 'utf8');
   }
 });
