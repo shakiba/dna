@@ -2,7 +2,7 @@
 
 **DNA is a human readable data format, it is inspired by XML, JSON, YAML, Jade and Properties file formats.**
 
-You can use this package to convert DNA to JSON from command line or read DNA files in JavaScript or Node.js.
+You can use this package to convert DNA to JSON from command line or read and write DNA in JavaScript or Node.js.
 
 Command line:
 ```bash
