@@ -1,6 +1,6 @@
 ## DNA
 
-**DNA is a human-readable data format, inspired by XML, JSON and Properties files and similar to YAML and Jade, with improved readability for end-users.**
+**DNA is a human-readable data format, inspired by XML, JSON and Properties files and similar to YAML and Jade, with improved readability.**
 
 You can use this package to parse and stringify DNA format in JavaScript or Node.js or convert DNA to JSON from command line.
 
