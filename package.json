@@ -1,7 +1,7 @@
 {
   "name": "dna-js",
-  "version": "0.0.2",
-  "description": "Human friendly data format.",
+  "version": "0.0.3",
+  "description": "Human-readable data format.",
   "author": "Ali Shakiba",
   "keywords": [
     "human-readable",

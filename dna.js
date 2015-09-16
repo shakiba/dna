@@ -1,5 +1,5 @@
 /*
- * DNA - Human readable data format
+ * DNA - Human-readable data format
  *
  * Copyright (c) 2015 Ali Shakiba
  * Available under the MIT license

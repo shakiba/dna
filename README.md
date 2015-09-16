@@ -1,24 +1,39 @@
 ## DNA
 
-**DNA is a human readable data format, it is inspired by XML, JSON, YAML, Jade and Properties file formats.**
+**DNA is a human-readable data format, inspired by XML, JSON and Properties files and similar to YAML and Jade, with improved readability for end-users.**
 
-You can use this package to convert DNA to JSON from command line or read and write DNA in JavaScript or Node.js.
+You can use this package to parse and stringify DNA format in JavaScript or Node.js or convert DNA to JSON from command line.
 
-Command line:
-```bash
-dna json file.dna > file.json
-```
+##### Node.js
 
-JavaScript:
+###### Usage
 ```js
 var object = DNA.parse(string);
 
 var string = DNA.stringify(object);
 ```
 
-Install:
+###### Install
 ```
-npm install -g dna-js
+npm install dna-js --save
 ```
 
-An example [DNA file](./test/basic.dna) and its [JSON convertion](./test/basic.json) are available in [/test](./test) directory.
+##### Command Line
+
+###### Usage
+
+```bash
+dna json file.dna > file.json
+```
+
+###### Install
+```
+npm install dna-js -g
+```
+
+#### Example
+An [example](./test/basic.dna) DNA file with JSON [conversion](./test/basic.json) are available in [/test](./test) directory.
+
+#### License
+Copyright (c) 2015 Ali Shakiba  
+Available under the MIT license

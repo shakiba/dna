@@ -19,7 +19,7 @@ function cli(params) {
     }
   }
 
-  console.log('DNA - Human readable data format');
+  console.log('DNA - Human-readable data format');
   console.log('Usage: dna json <dna file>');
   console.log('');
 
