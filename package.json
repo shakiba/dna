@@ -1,7 +1,7 @@
 {
   "name": "dna-js",
   "version": "0.0.3",
-  "description": "Human-readable data format.",
+  "description": "Human-readable data format",
   "author": "Ali Shakiba",
   "keywords": [
     "human-readable",
@@ -9,6 +9,8 @@
     "file",
     "serialization",
     "data",
+    "parse",
+    "stringify",
     "document"
   ],
   "license": "MIT",

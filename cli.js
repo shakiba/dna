@@ -19,7 +19,13 @@ function cli(params) {
     }
   }
 
-  console.log('DNA - Human-readable data format');
+  var pkg = {};
+  try {
+    pkg = require('./package.json');
+  } catch (ex) {
+  }
+
+  console.log('DNA' + (pkg.version ? ' ' + pkg.version : ''));
   console.log('Usage: dna json <dna file>');
   console.log('');
 

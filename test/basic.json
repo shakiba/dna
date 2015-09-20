@@ -1,24 +1,27 @@
 {
   "simple" : "This is a simple string value.",
   "object" : {
-    "key-one" : "One",
-    "key-two" : "Two",
-    "inner-one" : {
-      "inner-key-one" : "OneOne",
-      "inner-key-two" : "TwoTwo"
+    "one" : "One",
+    "two" : "Two",
+    "three" : {
+      "three-one" : "One",
+      "three-two" : "Two"
     },
-    "inner-two" : {
-      "inner-key-one" : "TwoOne",
-      "inner-key-two" : "TwoTwo",
-      "deeper" : {
-        "deep-key" : [ "Deep One", "Deep One" ]
+    "four" : {
+      "four-one" : "One",
+      "four-two" : "Two",
+      "four-three" : {
+        "four-three-one" : [ "One", "Two" ]
       }
     }
   },
-  "multi-line" : "This is\na multi-line\nstring value.",
-  "list" : [ "simple", "multi\n\nline\n", {
-    "inner-one" : "One",
-    "inner-two" : "Two\nTwo"
-  } ],
+  "multiline" : "This is\na multi-line\nstring value.",
+  "list" : [
+    "simple", "multi\n\nline\n",
+    {
+      "one" : "One",
+      "two" : "multi\nline"
+    }
+  ],
   "empty" : ""
 }

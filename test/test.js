@@ -6,20 +6,19 @@ var DNA = require('../');
 describe('DNA', function() {
 
   it('parse', function() {
-    var input = readFileSync('basic.dna');
-    var output = readFileSync('basic.json');
-    output = JSON.parse(output);
-    input = DNA.parse(input);
-    expect(input).eql(output);
+    var dna = readFileSync('basic.dna');
+    var json = readFileSync('basic.json');
+    json = JSON.parse(json);
+    dna = DNA.parse(dna);
+    expect(dna).eql(json);
   });
 
   it('stringify', function() {
-    var obj = readFileSync('basic.json');
-    obj = JSON.parse(obj);
-
-    obj = DNA.stringify(obj);
-
-    console.log(obj);
+    var json = readFileSync('basic.json');
+    var dna = readFileSync('basic.dna');
+    json = JSON.parse(json);
+    json = DNA.stringify(json);
+    expect(json.replace(/\s+/g, ' ')).eql(dna.replace(/\s+/g, ' '));
   });
 
   function readFileSync(name) {

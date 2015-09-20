@@ -5,12 +5,75 @@
  * Available under the MIT license
  */
 
-function config(options) {
+var DNA = (function config(options) {
   options = options || {};
 
-  var noisy = options.noisy;
+  var debug = options.debug || false;
 
-  function wrap(input) {
+  function parse(input) {
+    input = makeInput(input);
+    return read(0, input);
+  }
+
+  // one-pass post-order recursive read
+  function read(indent, input) {
+
+    var data = null, text = null;
+
+    debug && console.log(indent);
+
+    // next line
+    while (!input.eof) {
+
+      // if line is less indented (and not empty) return to parent context
+      debug && console.log('?', input.line);
+      if (input.text && input.indent < indent) {
+        break;
+      }
+
+      // consume current line
+      var line = input.shift();
+
+      if (line.key) {
+        // use as object or array
+        data = data || {};
+        debug && console.log('.', line.key);
+
+        var value = line.value;
+
+        // if next line is more indented read it as value
+        if (!input.eof) {
+          debug && console.log('>', input.line);
+          if (input.indent > indent) {
+            value = read(input.indent, input);
+          }
+        }
+
+        if (line.pipe == 'list') {
+          debug && console.log('@list');
+          if (!isArray(data)) {
+            data[line.key] = line.key in data ? [ data[line.key] ] : [];
+          }
+        }
+        multimapSet(data, line.key, value);
+
+      } else {
+        // line contains a string, it is multiline string
+        text = text || [];
+        debug && console.log('+', line.text);
+        text.push(line.text);
+      }
+
+      debug && console.log('=', data, text);
+    }
+
+    var result = data || (text && text.join('\n').replace(/\n$/, ''));
+    debug && console.log('<<', JSON.stringify(result));
+    return result;
+  }
+
+  // prepare input for parser, wrap a multiline string
+  function makeInput(input) {
 
     if (typeof input === 'string') {
       input = input.split(/\n/);
@@ -29,118 +92,41 @@ function config(options) {
       };
     }
 
-    if (input.hasNext && input.next) {
-      var last = null;
-      return {
-        has : function() {
-          return last !== null || input.hasNext();
-        },
-        peek : function() {
-          if (last === null) {
-            last = new Line(input.next());
-          }
-          return last;
-        },
-        poll : function() {
-          if (last === null) {
-            return new Line(input.next());
-          }
-          var line;
-          line = last;
-          last = null;
-          return line;
-        }
-      };
-    }
-  }
-
-  function Line(line) {
-    this.line = line;
-    var regex = /^(\s*)(.*)$/.exec(line);
-    this.space = regex[1].length;
-    this.text = regex[2];
-    if (regex = /^((\w|\-)+)\:\s*(.*)/.exec(this.text)) {
-      this.key = regex[1];
-      this.value = regex[3];
-    } else if (regex = /^((\w|\-)*)\.((\w|\-)+)\:\s*(.*)/.exec(this.text)) {
-      this.key = regex[1];
-      this.meta = regex[3];
-      this.value = regex[5];
-    }
-  }
-
-  function parse(input) {
-
-    input = wrap(input);
-
-    return (function read(space, parent) {
-      noisy && console.log('>>');
-
-      var data = null, text = null;
-
-      while (input.has()) {
-
-        var line = input.peek();
-        noisy && console.log('?', line.line);
-        if (line.text && line.space < space) {
-          break;
-        }
-
-        input.poll();
-        noisy && console.log('-', line.line);
-
-        var child = line.value;
-        if (input.has()) {
-          var next = input.peek();
-          noisy && console.log('?', next.line);
-          if (next.space > space) {
-            child = read(next.space);
+    var result = {
+      shift : function() {
+        var first = {};
+        for ( var key in this) {
+          if ('shift' !== key && 'eof' !== key) {
+            first[key] = this[key];
+            delete this[key];
           }
         }
-
-        if (line.meta) {
-
-          noisy && console.log('.', line.meta, line.value);
-
-          if (line.meta == 'type') {
-            if (line.key && line.value == 'list') {
-              data = data || {};
-              if (!Array.isArray(data[line.key])) {
-                data[line.key] = line.key in data ? [ data[line.key] ] : [];
-              }
-            }
+        if (input.hasNext()) {
+          var line = input.next();
+          this.line = line;
+          var regex = /^(\s*)(.*)$/.exec(line);
+          this.indent = regex[1].length;
+          this.text = regex[2];
+          if (regex = /^((\w|\-)+)\:\s*(.*)/.exec(this.text)) {
+            // key: value
+            this.key = regex[1];
+            this.value = regex[3];
+          } else if (regex = /^((\w|\-)*)[@|]((\w|\-)+)\:\s*(.*)/
+              .exec(this.text)) {
+            // key@pipe: value
+            this.key = regex[1];
+            this.pipe = regex[3];
+            this.value = regex[5];
           }
-
-        } else if (line.key) {
-
-          data = data || {};
-          noisy && console.log('+', line.key, JSON.stringify(line.value));
-          assign(data, line.key, line.value || child);
-
+          this.eof = false;
         } else {
-          text = text || [];
-          text.push(line.text);
-          // line.text && (istext = true);
+          this.eof = true;
         }
-
-        noisy && console.log('=', JSON.stringify(data), JSON.stringify(text));
+        return first;
       }
-
-      var result = data || text && text.join('\n').replace(/\n$/, '');
-      noisy && console.log('<<', JSON.stringify(result));
-      return result;
-    })(0);
-  }
-
-  function assign(obj, key, value) {
-    if (!(key in obj)) {
-      obj[key] = value;
-    } else {
-      if (!Array.isArray(obj[key])) {
-        obj[key] = [ obj[key] ];
-      }
-      obj[key].push(value);
-    }
+    };
+    result.shift();
+    return result;
   }
 
   function stringify(obj, replacer, space) {
@@ -160,7 +146,7 @@ function config(options) {
       replacer : replacer,
       cycle : [],
       mark : function(value) {
-        if (ctx.cycle.indexOf(value) === -1) {
+        if (indexOf(ctx.cycle, value) === -1) {
           ctx.cycle.push(value);
           return true;
         } else {
@@ -174,7 +160,7 @@ function config(options) {
 
     if (obj === null || typeof obj === 'undefined') {
 
-    } else if (Array.isArray(obj)) {
+    } else if (isArray(obj)) {
       for (var i = 0; i < obj.length; i++) {
         write(ctx, '', i + ':', obj[i]);
       }
@@ -193,7 +179,7 @@ function config(options) {
     if (value === null || typeof value === 'undefined') {
       ctx.push(space + name);
 
-    } else if (Array.isArray(value)) {
+    } else if (isArray(value)) {
       if (ctx.mark(value)) {
         for (var i = 0; i < value.length; i++) {
           write(ctx, space, name, value[i]);
@@ -221,15 +207,58 @@ function config(options) {
     }
   }
 
+  function pipe(name, data, text) {
+
+  }
+
   return {
     parse : parse,
     stringify : stringify,
     config : config
   };
-}
 
-// Array.isArray, array.indexOf
+  function isArray(value) {
+    if (!value) {
+      return false;
+    } else if (typeof Array.isArray === 'function') {
+      return Array.isArray(value);
+    } else {
+      return '[object Array]' === Object.prototype.toString.call(value);
+    }
+  }
+
+  function indexOf(array, item) {
+    if (!isArray(array)) {
+      return -1;
+    } else if (typeof array.indexOf === 'function') {
+      return array.indexOf(item);
+    } else {
+      for (var i = 0; i < array.length; i++) {
+        if (item === array[i]) {
+          return i;
+        }
+      }
+      return -1;
+    }
+  }
+
+  function multimapSet(obj, key, value) {
+    if (!(key in obj)) {
+      obj[key] = value;
+    } else if (!isArray(obj[key])) {
+      obj[key] = [ obj[key], value ];
+    } else {
+      obj[key].push(value);
+    }
+  }
+})();
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = config();
+  module.exports = DNA;
+} else if (typeof define === 'function' && define.amd) {
+  define(function() {
+    return DNA;
+  });
+} else if (typeof window !== 'undefined') {
+  window.DNA = DNA;
 }
