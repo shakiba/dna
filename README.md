@@ -6,8 +6,30 @@ DNA format consists of a list of indented key-value pairs.
 Objects (maps) are created by indenting key-values and lists (arrays) are created by repeating a key.
 Multiline strings are supported as values.
 
-DNA format was initially created to store static websites data, which is the DNA of a static website.
+DNA format was initially created to store static websites data, that is to be the DNA of a static website.
 DNA is inspired by XML, JSON, Properties files and Markdown and is similar to YAML and Jade.
+
+##### Example
+
+```dna
+simple: This is a simple value.
+
+object:
+  one: One
+  two: Two
+  three:
+    one: Inner One
+    two: Inner Two
+
+multiline:
+  This is
+  a multi-line
+  string value.
+
+list: Item One
+list: Item Two
+list: Item Three
+```
 
 #### JavaScript
 
@@ -38,7 +60,7 @@ DNA CLI can be used to convert DNA format to JSON.
 
 ###### Install
 ```
-npm install dna-js -g
+npm install -g dna-js
 ```
 
 ###### Usage
