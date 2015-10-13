@@ -11,28 +11,28 @@ var DNA = (function config(options) {
   var debug = options.debug || false;
 
   function parse(input) {
-    input = makeInput(input);
-    return read(0, input);
+    var stream = new InputStream(input);
+    return read(stream, 0);
   }
 
   // one-pass post-order recursive read
-  function read(indent, input) {
+  function read(stream, indent) {
 
     var data = null, text = null;
 
     debug && console.log(indent);
 
     // next line
-    while (!input.eof) {
+    while (!stream.eof) {
 
       // if line is less indented (and not empty) return to parent context
-      debug && console.log('?', input.line);
-      if (input.text && input.indent < indent) {
+      debug && console.log('?', stream.line);
+      if (stream.text && stream.indent < indent) {
         break;
       }
 
       // consume current line
-      var line = input.shift();
+      var line = stream.shift();
 
       if (line.key) {
         // use as object or array
@@ -42,10 +42,10 @@ var DNA = (function config(options) {
         var value = line.value;
 
         // if next line is more indented read it as value
-        if (!input.eof) {
-          debug && console.log('>', input.line);
-          if (input.indent > indent) {
-            value = read(input.indent, input);
+        if (!stream.eof) {
+          debug && console.log('>', stream.line);
+          if (stream.indent > indent) {
+            value = read(stream, stream.indent);
           }
         }
 
@@ -72,8 +72,7 @@ var DNA = (function config(options) {
     return result;
   }
 
-  // prepare input for parser, wrap a multiline string
-  function makeInput(input) {
+  function InputStream(input) {
 
     if (typeof input === 'string') {
       input = input.split(/\n/);
@@ -92,41 +91,38 @@ var DNA = (function config(options) {
       };
     }
 
-    var result = {
-      shift : function() {
-        var first = {};
-        for ( var key in this) {
-          if ('shift' !== key && 'eof' !== key) {
-            first[key] = this[key];
-            delete this[key];
-          }
+    this.shift = function() {
+      var first = {};
+      for ( var key in this) {
+        if ('shift' !== key && 'eof' !== key) {
+          first[key] = this[key];
+          delete this[key];
         }
-        if (input.hasNext()) {
-          var line = input.next();
-          this.line = line;
-          var regex = /^(\s*)(.*)$/.exec(line);
-          this.indent = regex[1].length;
-          this.text = regex[2];
-          if (regex = /^((\w|\-)+)\:\s*(.*)/.exec(this.text)) {
-            // key: value
-            this.key = regex[1];
-            this.value = regex[3];
-          } else if (regex = /^((\w|\-)*)[@|]((\w|\-)+)\:\s*(.*)/
-              .exec(this.text)) {
-            // key@pipe: value
-            this.key = regex[1];
-            this.pipe = regex[3];
-            this.value = regex[5];
-          }
-          this.eof = false;
-        } else {
-          this.eof = true;
-        }
-        return first;
       }
+      if (input.hasNext()) {
+        var line = input.next();
+        this.line = line;
+        var regex = /^(\s*)(.*)$/.exec(line);
+        this.indent = regex[1].length;
+        this.text = regex[2];
+        if (regex = /^((\w|\-)+)\:\s*(.*)/.exec(this.text)) {
+          // key: value
+          this.key = regex[1];
+          this.value = regex[3];
+        } else if (regex = /^((\w|\-)*)[@|]((\w|\-)+)\:\s*(.*)/.exec(this.text)) {
+          // key@pipe: value
+          this.key = regex[1];
+          this.pipe = regex[3];
+          this.value = regex[5];
+        }
+        this.eof = false;
+      } else {
+        this.eof = true;
+      }
+      return first;
     };
-    result.shift();
-    return result;
+
+    this.shift();
   }
 
   function stringify(obj, replacer, space) {
