@@ -18,17 +18,17 @@ object:
   one: One
   two: Two
   three:
-    one: Inner One
-    two: Inner Two
+    one: Three One
+    two: Three Two
 
 multiline:
   This is
   a multi-line
   string value.
 
-list: Item One
-list: Item Two
-list: Item Three
+list: First
+list: Second
+list: Third
 ```
 
 #### JavaScript
