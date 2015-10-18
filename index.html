@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html><head>
+  <meta charset="UTF-8">
+  <title>DNA Editor</title>
+  <link rel="stylesheet" href="./editor/dep/normalize.css" />
+  <link rel="stylesheet" href="./editor/dep/codemirror.css">
+  <link rel="stylesheet" href="./editor/editor.css">
+</head><body><div class="main">
+
+  <div id="editor-title">
+    <b><a href="https://github.com/shakiba/dna">DNA</a> Editor</b>
+  </div>
+
+  <div id="editor-tabs">
+    <a id="dna-tab" class="tab" onclick="editor.view()">DNA</a>
+    <a id="json-tab" class="tab" onclick="editor.view('json')">JSON</a>
+  </div>
+
+  <div id="editor-panel">
+    <div id="dna-panel" class="textbox">
+      <textarea id="dna-content" data-file="./editor/sample.dna"></textarea>
+    </div>
+    <div id="json-panel" class="textbox">
+      <textarea id="json-content"></textarea>
+    </div>
+  </div>
+
+  <script src="./dna.js"></script>
+  <script src="./editor/dep/lodash.min.js"></script>
+  <script src="./editor/dep/jquery.min.js"></script>
+
+  <script src="./editor/dep/codemirror.js"></script>
+  
+  <script src="./editor/codemirror-dna.js"></script>
+  <script src="./editor/editor.js"></script>
+
+</div></body></html>

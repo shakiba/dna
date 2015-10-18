@@ -1,0 +1,17 @@
+simple: This is a simple value.
+
+object:
+  one: One
+  two: Two
+  three:
+    one: Three One
+    two: Three Two
+
+multiline:
+  This is
+  a multi-line
+  string value.
+
+list: First
+list: Second
+list: Third

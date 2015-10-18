@@ -6,10 +6,12 @@ DNA format consists of a list of indented key-value pairs.
 Objects (maps) are created by indenting key-values and lists (arrays) are created by repeating a key.
 Multiline strings are supported as values.
 
-DNA format was initially created to store static websites data, that is to be the DNA of a static website.
-DNA is inspired by XML, JSON, Properties files and Markdown and is similar to YAML and Jade.
+DNA format was initially created to store data of static websites, so it is called DNA.
+DNA format is inspired by XML, JSON, Properties files and Markdown and is similar to YAML and Jade.
 
 ##### Example
+
+Try this example in [DNA Editor](https://shakiba.github.io/dna/).
 
 ```dna
 simple: This is a simple value.
